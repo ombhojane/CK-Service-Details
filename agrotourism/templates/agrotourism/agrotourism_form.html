@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agrotourism Content Generator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("form").on("submit", function(event){
+            event.preventDefault();
+            var service_name = $("#service_name").val();
+            $.ajax({
+                url: "/generate/",
+                type: "POST",
+                data: {
+                    service_name: service_name,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(response) {
+    $("#response").text(response.text);
+}
+
+            });
+        });
+    });
+    </script>
+</head>
+<body>
+    <h1>Agrotourism Content Generator</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="service_name">Enter the name of the agrotourism service:</label><br>
+        <input type="text" id="service_name" name="service_name" required><br>
+        <input type="submit" value="Generate">
+    </form>
+    <div id="response"></div>
+</body>
+</html>
