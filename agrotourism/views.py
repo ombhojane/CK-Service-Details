@@ -57,9 +57,13 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import google.generativeai as genai
 import time 
+import os
 
 # Configure your API key here
-API_KEY = "AIzaSyAntOgKg60M3BuBJUGj9PSZg3hXt3dHCm4"
+API_KEY = os.getenv("GENERATIVEAI_API_KEY")
+
+if not API_KEY:
+    raise ValueError("No API key set for 'API_KEY'")
 
 # Configure the Generative AI API
 genai.configure(api_key=API_KEY)
