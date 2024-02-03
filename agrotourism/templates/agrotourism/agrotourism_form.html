@@ -4,24 +4,29 @@
     <title>Agrotourism Content Generator</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-    $(document).ready(function(){
-        $("form").on("submit", function(event){
-            event.preventDefault();
-            var service_name = $("#service_name").val();
-            $.ajax({
-                url: "/generate/",
-                type: "POST",
-                data: {
-                    service_name: service_name,
-                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                },
-                success: function(response) {
-    $("#response").text(response.text);
+    function generateAllContent(serviceName) {
+  $.ajax({
+    type: 'POST',
+    url: '/generate-content/', // The URL to your Django view
+    data: {
+      'service_name': serviceName
+    },
+    success: function(responses) {
+      // responses will contain 'title', 'business_plan', 'budget', 'setup_process'
+      $('#title').text(responses.title);
+      $('#business_plan').text(responses.business_plan);
+      $('#budget').text(responses.budget);
+      $('#setup_process').text(responses.setup_process);
+    },
+    error: function(error) {
+      console.log('Error:', error);
+    }
+  });
 }
 
-            });
-        });
-    });
+// Call this function with the service name
+generateAllContent('Agrotourism');
+
     </script>
 </head>
 <body>
@@ -32,6 +37,17 @@
         <input type="text" id="service_name" name="service_name" required><br>
         <input type="submit" value="Generate">
     </form>
-    <div id="response"></div>
+    <h2>Title</h2>
+    <p>{{ title }}</p>
+
+    <h2>Business Plan</h2>
+    <p>{{ business_plan }}</p>
+
+    <h2>Budget</h2>
+    <p>{{ budget }}</p>
+
+    <h2>Setup Process</h2>
+    <p>{{ setup_process }}</p>
+      
 </body>
 </html>
